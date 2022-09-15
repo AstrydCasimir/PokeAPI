@@ -21,3 +21,24 @@ function getPoke() {
 //Await allows to wait until the function has finished executed
 const mypoke = await getPoke()
 console.log(mypoke[0])
+
+//---------------------------------------
+
+function numberOfVowel(word){
+    //g : global, i : ignore the casse
+    var nbVowel = word.match(/[aeiou]/gi);
+    return nbVowel === null ? 0 : nbVowel.length;
+}
+
+function numberOfVowelForEachPoke(pokeList){
+    const pokeAndVowel = []
+    pokeList.forEach(element => {
+        let onePoke = [element.name , numberOfVowel(element.name)]
+        pokeAndVowel.push(onePoke)
+    })
+    console.log(pokeAndVowel)
+}
+
+// The number of vowel for each POKE
+console.log("The number of vowel for each POKE")
+numberOfVowelForEachPoke(mypoke)
