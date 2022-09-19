@@ -42,3 +42,55 @@ function numberOfVowelForEachPoke(pokeList){
 // The number of vowel for each POKE
 console.log("The number of vowel for each POKE")
 numberOfVowelForEachPoke(mypoke)
+
+//---------------------------------------
+
+function parseUrl(urlText){
+    //Parse the data
+    const JSONparse = JSON.parse(urlText)
+    //Keep only the results and remove not wanted information
+    const pokeInfo = JSONparse.types
+    const types = []
+    pokeInfo.forEach(poke => {
+        types.push(poke.type)
+    })
+    //console.log(types)
+    return types
+}
+
+async function getUrlPoke(PokeList){
+    const allPokeUrl = []
+    PokeList.forEach(poke => {
+        allPokeUrl.push(poke.url)
+      })
+    Promise.all(allPokeUrl.map(url =>
+        fetch(url)
+        .then(response => response.text())
+        .then(parseUrl)
+        .catch(console.log)
+    ))
+    .then(data => {
+        //console.log(data)
+        getTypeOccurence(data)
+        return data
+    })
+}
+
+function getTypeOccurence(typePokeList){
+    //use reduce
+    var concatTypeList = typePokeList.reduce(function(a, b) {
+        return a.concat(b);
+    });
+    let PokeOccuTypes = concatTypeList.reduce(function (acc, obj) {
+        var cle = obj["name"];
+        if(!acc[cle]){
+          acc[cle] = [];
+        }
+        acc[cle].push(obj["url"]);
+        return acc;
+      }, {});
+    console.log(PokeOccuTypes)
+}
+
+console.log("The types")
+let allTypes = await getUrlPoke(mypoke)
