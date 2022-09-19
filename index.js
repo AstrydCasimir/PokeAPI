@@ -31,12 +31,17 @@ function numberOfVowel(word){
 }
 
 function numberOfVowelForEachPoke(pokeList){
+    /*
     const pokeAndVowel = []
     pokeList.forEach(element => {
         let onePoke = [element.name , numberOfVowel(element.name)]
         pokeAndVowel.push(onePoke)
     })
-    console.log(pokeAndVowel)
+    */
+    let pokeWithPoke = pokeList.map(item => {
+        return [item.name, numberOfVowel(item.name)]
+    })
+    console.log(pokeWithPoke)
 }
 
 // The number of vowel for each POKE
