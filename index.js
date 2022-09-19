@@ -10,7 +10,7 @@ function parseText(text){
     return pokeInfo
 }
 
-function getPoke() {
+async function getPoke() {
     //Collect POKEMON with the link
     return fetch("https://pokeapi.co/api/v2/pokemon/?&limit=1154")
     .then(response => response.text())
@@ -72,7 +72,7 @@ async function getUrlPoke(PokeList){
     .then(data => {
         //console.log(data)
         getTypeOccurence(data)
-        return data
+        //return data
     })
 }
 
@@ -89,8 +89,58 @@ function getTypeOccurence(typePokeList){
         acc[cle].push(obj["url"]);
         return acc;
       }, {});
+    console.log("The types")
     console.log(PokeOccuTypes)
 }
 
-console.log("The types")
-let allTypes = await getUrlPoke(mypoke)
+
+await getUrlPoke(mypoke)
+
+//---------------------------------------
+
+function parseUrl10Poke(urlText){
+    //Parse the data
+    const JSONparse = JSON.parse(urlText)
+    //Keep only the results and remove not wanted information
+    const pokeStats = JSONparse.stats
+    const pokeType = JSONparse.types
+    const types = []
+    pokeType.forEach(poke => {
+        types.push(poke.type.name)
+    })
+    const myInfo =[
+        pokeStats[1].base_stat,
+        pokeStats[2].base_stat,
+        pokeType
+    ]
+    return myInfo
+}
+
+function listOf10Poke(mypoke){
+    const poke10 = mypoke.slice(0,10)
+    //console.log(poke10)
+    Promise.all(poke10.map(poke =>
+        fetch(poke.url)
+        .then(response => response.text())
+        .then(parseUrl10Poke)
+        .catch(console.log)
+    ))
+    .then(data => {
+        //console.log(data)
+        //console.log(poke10)
+        let my10PokeInfo = []
+        for (let i=0; i<10; i++){
+            my10PokeInfo.push({
+                Name : poke10[i].name ,
+                Attack : data[i][0] ,
+                Defense : data[i][1],
+                Type : data[i][2] 
+            })
+        }
+        console.log("My 10 Poke Info")
+        console.log(my10PokeInfo)
+
+    })
+}
+
+listOf10Poke(mypoke)
